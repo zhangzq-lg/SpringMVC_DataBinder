@@ -1,0 +1,1 @@
+此项目是maven搭建SpringMVC实现MVC数据绑定
