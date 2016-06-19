@@ -1,10 +1,15 @@
 package com.lg.gz.spring;
 
 import com.lg.gz.spring.domain.*;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.beans.PropertyEditor;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -158,5 +163,104 @@ public class TestController {
 		System.out.println("admin = " + admin);
 		return admin.toString();
 	}
+
+	/**
+	 * http://localhost:8080/SpringMVC/converter.do?bool=no
+	 * 参数的设定是依据：StringToBooleanConverter中的trueValues和falseValues值来判断是true or false
+	 *
+	 * @param bool
+	 * @return
+	 */
+	@RequestMapping(value = "converter.do")
+	@ResponseBody
+	public String converter(Boolean bool) {
+		return bool.toString();
+	}
+
+	/**
+	 * http://localhost:8080/SpringMVC/date1.do?date=2012-02-05
+	 * 参数的绑定通过下面的initDate1进行初始化参数绑定
+	 *
+	 * @param date
+	 * @return
+	 */
+	@RequestMapping(value = "date1.do")
+	@ResponseBody
+	public String date1(Date date) {
+		return date.toString();
+	}
+
+	/**
+	 * 这种初始化方式只能解决一个某个特定的变量类型，如果变量多则不可采取此种方式
+	 * 需要使用全局的配置来进行数据绑定配置
+	 *
+	 * @param binder
+	 */
+//	@InitBinder("date")
+//	public void initDate1(WebDataBinder binder) {
+//		// 此处是通过数据绑定注册，将Date类型的数据转换成CustomDateEditor类型，其中的“true”：表示可以为空
+//		binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+//	}
+
+	/**
+	 * localhost:8080/SpingMVC/book
+	 *
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/book", method = RequestMethod.GET)
+	@ResponseBody
+	public String book(HttpServletRequest request) {
+		String contentType = request.getContentType();
+		if (contentType == null) {
+			return "book.default";
+		} else if (contentType.equals("txt")) {
+			return "book.txt";
+		} else if (contentType.equals("html")) {
+			return "book.html";
+		}
+
+		return "book.default";
+	}
+
+	/**
+	 * localhost:8080/SpringMVC/subject/0001
+	 * @param subjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/subject/{subjectId}", method = RequestMethod.GET)
+	@ResponseBody
+	public String subjectGet(@PathVariable("subjectId") String subjectId) {
+		return "this is get method, subjectId = " + subjectId;
+	}
+	@RequestMapping(value = "/subject/{subjectId}", method = RequestMethod.POST)
+	@ResponseBody
+	public String subjectPost(@PathVariable("subjectId") String subjectId) {
+		return "this is post method, subjectId = " + subjectId;
+	}
+
+	/**
+	 * 这是删除
+	 * @param subjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/subject/{subjectId}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public String subjectDelete(@PathVariable("subjectId") String subjectId) {
+		return "this is delete method, subjectId = " + subjectId;
+	}
+
+	/**
+	 * put不只限于更新
+	 * @param subjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/subject/{subjectId}", method = RequestMethod.PUT)
+	@ResponseBody
+	public String subjectPut(@PathVariable("subjectId") String subjectId) {
+		return "this is put method, subjectId = " + subjectId;
+	}
+
+
 
 }

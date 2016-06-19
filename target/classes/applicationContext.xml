@@ -11,11 +11,11 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- 此文件是加载资源配置等 -->
-
     <mvc:default-servlet-handler/>
-
+    <!--开启注解-->
     <mvc:annotation-driven/>
-    <context:component-scan base-package="com.lg.gz.spring"/>
+    <!--开启扫描-->
+    <context:component-scan base-package="com.lg.gz.spring" annotation-config="true"/>
     <!--
     <context:component-scan base-package="mapper" />
     <context:component-scan base-package="service" />

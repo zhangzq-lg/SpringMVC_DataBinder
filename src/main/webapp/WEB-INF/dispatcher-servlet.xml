@@ -11,11 +11,42 @@
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- 这文件配置是配置SpringMVC的注解扫描等配置 -->
-
     <mvc:default-servlet-handler/>
+    <!--开启扫描-->
+    <context:component-scan base-package="com.lg.gz.spring" annotation-config="true"/>
+    <!--使得注入的id = convertersBean 的Bean生效，这是全局配置-->
+    <mvc:annotation-driven conversion-service="convertersBean"/>
+    <!--使得注入的myDateFormatter类生效-->
+    <!--<mvc:annotation-driven conversion-service="myDateFormatter"/>-->
 
-    <mvc:annotation-driven/>
-    <context:component-scan base-package="com.lg.gz.spring"/>
+    <!-- 注入convertersBean -->
+    <bean id="convertersBean"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <!-- 配置转换类 -->
+        <property name="converters">
+            <!--配置set的多个值-->
+            <set>
+                <!-- 此配置是将String类型转换成Boolean类型的转换器 -->
+                <bean class="org.springframework.core.convert.support.StringToBooleanConverter"/>
+                <bean class="com.lg.gz.spring.common.MyDateConverter"/>
+            </set>
+        </property>
+        <!--配置全局的时间转化类-->
+        <!--<property name="formatters">
+            <set>
+                <bean class="com.lg.gz.spring.common.MyDateFormatter"/>
+            </set>
+        </property>-->
+    </bean>
+    <!--配置全局的时间转化类-->
+    <!-- <bean id="myDateFormatter" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+         <property name="formatters">
+             <set>
+                 <bean class="com.lg.gz.spring.common.MyDateFormatter"></bean>
+             </set>
+         </property>
+     </bean>-->
+
     <!--
     <context:component-scan base-package="mapper" />
     <context:component-scan base-package="service" />
